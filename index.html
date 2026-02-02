@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Web MIDI Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #111;
+      color: #eee;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #log {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #222;
+      padding: 10px;
+      border-radius: 6px;
+      height: 300px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web MIDI Test</h1>
+  <button id="startBtn">Enable MIDI</button>
+  <div id="log"></div>
+
+  <script>
+    const logDiv = document.getElementById("log");
+    const btn = document.getElementById("startBtn");
+
+    function log(msg) {
+      logDiv.textContent += msg + "\n";
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    btn.onclick = async () => {
+      if (!navigator.requestMIDIAccess) {
+        log("Web MIDI not supported in this browser.");
+        return;
+      }
+
+      try {
+        const midi = await navigator.requestMIDIAccess();
+        log("MIDI access granted.");
+
+        if (midi.inputs.size === 0) {
+          log("No MIDI devices detected.");
+        }
+
+        for (let input of midi.inputs.values()) {
+          log("Input: " + input.name);
+
+          input.onmidimessage = (event) => {
+            const [status, data1, data2] = event.data;
+            log(
+              `Message: status=${status} note=${data1} velocity=${data2}`
+            );
+          };
+        }
+
+      } catch (err) {
+        log("MIDI access denied or failed: " + err);
+      }
+    };
+  </script>
+</body>
+</html>
