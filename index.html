@@ -70,5 +70,29 @@
       }
     };
   </script>
+  <div id="output"></div>
+  <script src="https://unpkg.com/vexflow/build/cjs/vexflow.js"></script>
+  <script>
+  const VF = Vex.Flow;
+  
+  const div = document.getElementById("output");
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(300, 150);
+  
+  const context = renderer.getContext();
+  const stave = new VF.Stave(10, 40, 280);
+  stave.addClef("treble").setContext(context).draw();
+  
+  const notes = [
+    new VF.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new VF.StaveNote({ keys: ["d/4"], duration: "q" }),
+  ];
+  
+  const voice = new VF.Voice({ num_beats: 2, beat_value: 4 });
+  voice.addTickables(notes);
+  
+  new VF.Formatter().joinVoices([voice]).format([voice], 200);
+  voice.draw(context, stave);
+  </script>
 </body>
 </html>
