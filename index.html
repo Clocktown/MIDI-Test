@@ -71,28 +71,29 @@
     };
   </script>
   <div id="output"></div>
-  <script src="https://unpkg.com/vexflow@5.0.0/build/cjs/vexflow.js"></script>
-  <script>
-  const VF = Vex.Flow;
-  
+<script type="module">
+  import { Renderer, Stave, StaveNote, Voice, Formatter } 
+    from "https://unpkg.com/vexflow@5.0.0/build/esm/entry/vexflow.js";
+
   const div = document.getElementById("output");
-  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+  const renderer = new Renderer(div, Renderer.Backends.SVG);
   renderer.resize(300, 150);
-  
+
   const context = renderer.getContext();
-  const stave = new VF.Stave(10, 40, 280);
+  const stave = new Stave(10, 40, 280);
   stave.addClef("treble").setContext(context).draw();
-  
+
   const notes = [
-    new VF.StaveNote({ keys: ["c/4"], duration: "q" }),
-    new VF.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new StaveNote({ keys: ["c/4"], duration: "q" }),
+    new StaveNote({ keys: ["d/4"], duration: "q" }),
   ];
-  
-  const voice = new VF.Voice({ num_beats: 2, beat_value: 4 });
+
+  const voice = new Voice({ num_beats: 2, beat_value: 4 });
   voice.addTickables(notes);
-  
-  new VF.Formatter().joinVoices([voice]).format([voice], 200);
+
+  new Formatter().joinVoices([voice]).format([voice], 200);
   voice.draw(context, stave);
-  </script>
+</script>
 </body>
 </html>
