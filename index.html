@@ -8,7 +8,7 @@
     body {
       font-family: sans-serif;
       padding: 20px;
-      background: #111;
+      background: #aaa;
       color: #eee;
     }
     button {
@@ -90,6 +90,7 @@
   ];
 
   const voice = new Voice({ num_beats: 2, beat_value: 4 });
+  voice.setStrict(false);
   voice.addTickables(notes);
 
   new Formatter().joinVoices([voice]).format([voice], 200);
